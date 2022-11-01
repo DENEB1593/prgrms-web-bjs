@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: social_server
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    cache-duration: PT1H
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: "jdbc:h2:mem:social_server;MODE=MYSQL;DB_CLOSE_DELAY=-1"
+    username: sa
+    password:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+      pool-name: H2_DB
+  sql:
+    init:
+      platform: h2
+      schema-locations: classpath:schema-h2.sql
+      data-locations: classpath:data-h2.sql
+  kafka:
+    topic:
+      subscription-request: v1.subscription.request
+      subscription-reply: v1.subscription.response
+      comment-created: v1.event.comment-created
+      user-joined: v1.event.user-joined
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: api
+      auto-offset-reset: latest
+    producer:
+      bootstrap-servers: localhost:9092
+server:
+  port: 8080
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: vRA3AY4apMyOfJ8EtJVX # 환경변수 JASYPT_ENCRYPTOR_PASSWORD 통해 전달해야 함
+jwt:
+  token:
+    header: api_key
+    issuer: social_server
+    clientSecret: ENC(4A3olL6mZa+WwBbSd0IBUpiwjoQhC5s4wZcKWYsRzfPr5/KuHtgSwxafwdlVpTdXOxVuOB3a1iY=)
+    expirySeconds: 0
+cloud:
+  aws:
+    s3:
+      region: ap-northeast-2
+      accessKey: ENC(TbShCuvx2ak8QrNuzEGopBYod2D4uMk5YRTRBNnz67w=)
+      secretKey: ENC(nOr+oy1LwJ3S8lMAWRSfarjVOtffZ6gkntGmOi/q/fCTLLS9ei0b9lx1e9FTTcilY1hLKfvju/g=)
+      url: https://s3.ap-northeast-2.amazonaws.com
+      bucketName: prgrms-web-bjs
+eventbus:
+  asyncPoolCore: 1
+  asyncPoolMax: 4
+  asyncPoolQueue: 100
